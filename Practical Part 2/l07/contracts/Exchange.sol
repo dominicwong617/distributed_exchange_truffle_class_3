@@ -1,4 +1,4 @@
-pragma solidity ^0.4.13;
+pragma solidity ^0.5.16;
 
 
 import "./owned.sol";
@@ -74,13 +74,13 @@ contract Exchange is owned {
     //////////////////////////////////
     // DEPOSIT AND WITHDRAWAL ETHER //
     //////////////////////////////////
-    function depositEther() payable {
+    function depositEther() public payable {
     }
 
-    function withdrawEther(uint amountInWei) {
+    function withdrawEther(uint amountInWei) public {
     }
 
-    function getEthBalanceInWei() constant returns (uint){
+    function getEthBalanceInWei() public view returns (uint){
     }
 
 
@@ -88,14 +88,14 @@ contract Exchange is owned {
     // TOKEN MANAGEMENT //
     //////////////////////
 
-    function addToken(string symbolName, address erc20TokenAddress) onlyowner {
+    function addToken(string memory symbolName, address erc20TokenAddress) public onlyowner {
         require(!hasToken(symbolName));
         symbolNameIndex++;
         tokens[symbolNameIndex].symbolName = symbolName;
         tokens[symbolNameIndex].tokenContract = erc20TokenAddress;
     }
 
-    function hasToken(string symbolName) constant returns (bool) {
+    function hasToken(string memory symbolName) public returns (bool) {
         uint8 index = getSymbolIndex(symbolName);
         if (index == 0) {
             return false;
@@ -104,7 +104,7 @@ contract Exchange is owned {
     }
 
 
-     function getSymbolIndex(string symbolName) internal returns (uint8) {
+     function getSymbolIndex(string memory symbolName) internal returns (uint8) {
         for (uint8 i = 1; i <= symbolNameIndex; i++) {
             if (stringsEqual(tokens[i].symbolName, symbolName)) {
                 return i;
@@ -135,13 +135,13 @@ contract Exchange is owned {
     //////////////////////////////////
     // DEPOSIT AND WITHDRAWAL TOKEN //
     //////////////////////////////////
-    function depositToken(string symbolName, uint amount) {
+    function depositToken(string memory symbolName, uint amount) public {
     }
 
-    function withdrawToken(string symbolName, uint amount) {
+    function withdrawToken(string memory symbolName, uint amount) public {
     }
 
-    function getBalance(string symbolName) constant returns (uint) {
+    function getBalance(string memory symbolName) public view returns (uint) {
     }
 
 
@@ -151,14 +151,14 @@ contract Exchange is owned {
     /////////////////////////////
     // ORDER BOOK - BID ORDERS //
     /////////////////////////////
-    function getBuyOrderBook(string symbolName) constant returns (uint[], uint[]) {
+    function getBuyOrderBook(string memory symbolName) public view returns (uint[] memory, uint[] memory) {
     }
 
 
     /////////////////////////////
     // ORDER BOOK - ASK ORDERS //
     /////////////////////////////
-    function getSellOrderBook(string symbolName) constant returns (uint[], uint[]) {
+    function getSellOrderBook(string memory symbolName) public view returns (uint[] memory, uint[] memory) {
     }
 
 
@@ -166,7 +166,7 @@ contract Exchange is owned {
     ////////////////////////////
     // NEW ORDER - BID ORDER //
     ///////////////////////////
-    function buyToken(string symbolName, uint priceInWei, uint amount) {
+    function buyToken(string memory symbolName, uint priceInWei, uint amount) public {
     }
 
 
@@ -176,7 +176,7 @@ contract Exchange is owned {
     ////////////////////////////
     // NEW ORDER - ASK ORDER //
     ///////////////////////////
-    function sellToken(string symbolName, uint priceInWei, uint amount) {
+    function sellToken(string memory symbolName, uint priceInWei, uint amount) public {
     }
 
 
@@ -184,7 +184,7 @@ contract Exchange is owned {
     //////////////////////////////
     // CANCEL LIMIT ORDER LOGIC //
     //////////////////////////////
-    function cancelOrder(string symbolName, bool isSellOrder, uint priceInWei, uint offerKey) {
+    function cancelOrder(string memory symbolName, bool isSellOrder, uint priceInWei, uint offerKey) public {
     }
 
 

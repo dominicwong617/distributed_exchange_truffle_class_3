@@ -89,7 +89,10 @@ contract Exchange is owned {
     //////////////////////
 
     function addToken(string symbolName, address erc20TokenAddress) onlyowner {
-        
+        require(!hasToken(symbolName));
+        symbolNameIndex++;
+        tokens[symbolNameIndex].symbolName = symbolName;
+        tokens[symbolNameIndex].tokenContract = erc20TokenAddress;
     }
 
     function hasToken(string symbolName) constant returns (bool) {

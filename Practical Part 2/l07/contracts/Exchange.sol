@@ -120,8 +120,11 @@ contract Exchange is owned {
         return 0;
     }
 
-
-
+    function getSymbolIndexOrThrow(string symbolName) returns (uint8) {
+        uint8 index = getSymbolIndex(symbolName);
+        require(index > 0);
+        return index;
+    }
 
     ////////////////////////////////
     // STRING COMPARISON FUNCTION //
@@ -138,17 +141,36 @@ contract Exchange is owned {
         return true;
     }
 
-
     //////////////////////////////////
     // DEPOSIT AND WITHDRAWAL TOKEN //
     //////////////////////////////////
     function depositToken(string memory symbolName, uint amount) public {
+        uint8 symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+        require(tokens[symbolNameIndex].tokenContract != address(0));
+
+        ERC20Interface token = ERC20Interface(tokens[symbolNameIndex].tokenContract);
+
+        require(token.transferFrom(msg.sender, address(this), amount) == true);
+        require(tokenBalanceForAddress[msg.sender][symbolNameIndex] + amount >= tokenBalanceForAddress[msg.sender][symbolNameIndex]);
+        tokenBalanceForAddress[msg.sender][symbolNameIndex] += amount;
     }
 
     function withdrawToken(string memory symbolName, uint amount) public {
+        uint8 symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+        require(tokens[symbolNameIndex].tokenContract != address(0));
+
+        ERC20Interface token = ERC20Interface(tokens[symbolNameIndex].tokenContract);
+
+        require(tokenBalanceForAddress[msg.sender][symbolNameIndex] - amount >= 0);
+        require(tokenBalanceForAddress[msg.sender][symbolNameIndex] - amount <= tokenBalanceForAddress[msg.sender][symbolNameIndex]);
+
+        tokenBalanceForAddress[msg.sender][symbolNameIndex] -= amount;
+        require(token.transfer(msg.sender, amount) == true);
     }
 
     function getBalance(string memory symbolName) public view returns (uint) {
+            uint8 symbolNameIndex = getSymbolIndexOrThrow(symbolName);
+            return tokenBalanceForAddress[msg.sender][symbolNameIndex];
     }
 
 

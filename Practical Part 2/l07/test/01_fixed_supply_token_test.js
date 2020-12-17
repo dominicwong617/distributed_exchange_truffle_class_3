@@ -62,4 +62,31 @@ contract('MyToken', function(accounts) {
             assert.equal(account_two_ending_balance, account_two_starting_balance + amount, "Amount wasn't correctly sent to the receiver");
         });
     });
+
+    it("should send token correctly", async function() {
+        var token;
+
+        //    Get initial balances of first and second account.
+        var account_one = accounts[0];
+        var account_two = accounts[1];
+
+        var account_one_starting_balance;
+        var account_two_starting_balance;
+        var account_one_ending_balance;
+        var account_two_ending_balance;
+
+        token = await fixedSupplyToken.deployed();
+        account_one_starting_balance = await token.balanceOf.call(account_one);
+        account_one_starting_balance = account_one_starting_balance.toNumber();
+        account_two_starting_balance = await token.balanceOf.call(account_two);
+        account_two_starting_balance = account_two_starting_balance.toNumber();
+        await token.transfer(account_two, account_one_starting_balance, {from: account_one});
+        account_one_ending_balance = await token.balanceOf.call(account_one);
+        account_one_ending_balance = account_one_ending_balance.toNumber();
+        account_two_ending_balance = await token.balanceOf.call(account_two);
+        account_two_ending_balance = account_two_ending_balance.toNumber();
+
+        assert.equal(account_one_ending_balance, 0, "Amount wasn't correctly taken from the sender");
+        assert.equal(account_two_ending_balance, account_two_starting_balance + account_one_starting_balance, "Amount wasn't correctly sent to the receiver");
+    });
 });
